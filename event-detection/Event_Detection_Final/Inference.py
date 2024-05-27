@@ -101,7 +101,7 @@ def video_classifier(video_path):
                     cv2.putText(frame, f"Classifier1: {predicted_class1}", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     # cv2.putText(frame, f"Classifier2: none", (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     # cv2.putText(frame, f"Classifier3: none", (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                    df.loc[i] = [i, timestamp, predicted1.item(), None, None]
+                    df.loc[i] = [i, timestamp, predicted_class1, None, None]
                 else:
         # If predicted1 is not 1, use the second classifier
                     output2 = classifier2_model(image_tensor)
@@ -116,14 +116,14 @@ def video_classifier(video_path):
                     cv2.putText(frame, f"Classifier3: {predicted_class3}", (30, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     cv2.putText(frame, f"Classifier1: {predicted_class1}", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     cv2.putText(frame, f"Classifier2: {predicted_class2}", (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                    df.loc[i] = [i, timestamp, predicted1.item(), predicted2.item(), predicted3.item()]
+                    df.loc[i] = [i, timestamp, predicted_class1, predicted_class2, predicted_class3]
                 else:
             # If predicted2 is not 7, write its value on the frame
                     predicted_class1 = map_class_index(predicted1.item(), class_to_idx_mapping_class1)
                     cv2.putText(frame, f"Classifier1: {predicted_class1}", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     predicted_class2 = map_class_index(predicted2.item(), class_to_idx_mapping)
                     cv2.putText(frame, f"Classifier2: {predicted_class2}", (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                    df.loc[i] = [i, timestamp, predicted1.item(), predicted2.item(), None]
+                    df.loc[i] = [i, timestamp, predicted_class1, predicted_class2, None]
 
     # Write frame with text to the output video
                 output_video.write(frame)
@@ -136,8 +136,10 @@ def video_classifier(video_path):
     
                 
     # Save results to CSV
-    df.to_csv(os.path.join(path,'output.csv'), index=False)
+    df.to_csv(os.path.join(path,'output_final.csv'), index=False)
     # Release output video writer
     output_video.release()
 
 video_classifier(os.path.join(path,'test.mp4'))
+
+
